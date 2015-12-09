@@ -2,6 +2,8 @@
 
 This is a rough and ready project that models an ATM. Done in a few hours so it is not completely implemented but does kind of show the basics of withdrawing money from an account from and ATM.
 
+The test data is all in the tests so I have not implemented an AccountServiceFacadeImpl.
+
 # Assumptions
 
 1. No data access had been modeled or implemented
