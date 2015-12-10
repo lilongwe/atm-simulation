@@ -74,9 +74,9 @@ public class GBPMinimumNotesDispenser implements Dispenser<GBP> {
 		
 		//as it is a tree map the first will be the lowest denominator 
 		//due to the comparator
-		Optional<Entry<GBP,Integer>> optional = cashStore.entrySet().stream()
-														.filter(a -> a.getValue() > 0)
-														.findFirst();
+		Optional<Entry<GBP,Integer>> optional = cashStore.entrySet().parallelStream()
+																		.filter(a -> a.getValue() > 0)
+																		.findFirst();
 		
 		Entry<GBP,Integer> entry = optional.get();
 			
@@ -142,7 +142,8 @@ public class GBPMinimumNotesDispenser implements Dispenser<GBP> {
 			logger.info("Adding 5 notes");
 			
 			//find lowest denomination
-			Integer lowest = toDispense.entrySet().stream()
+			Integer lowest = toDispense.entrySet().parallelStream()
+												.unordered()
 												.flatMapToInt(e -> IntStream.of(e.getKey().getValue()))
 												.sorted()
 												.findFirst()
@@ -207,9 +208,9 @@ public class GBPMinimumNotesDispenser implements Dispenser<GBP> {
 	
 	protected Optional<Entry<GBP,Integer>> seed(Map<GBP, Integer> notes, long amount) {
 		
-		Optional<Entry<GBP,Integer>> optional = notes.entrySet().stream()
-							.filter(a -> a.getValue() > 0 && a.getKey().getValue() <= amount)
-							.findFirst();
+		Optional<Entry<GBP,Integer>> optional = notes.entrySet().parallelStream()
+																	.filter(a -> a.getValue() > 0 && a.getKey().getValue() <= amount)
+																	.findFirst();
 		
 		logger.debug("Seeding note {}", optional);
 		
@@ -233,7 +234,7 @@ public class GBPMinimumNotesDispenser implements Dispenser<GBP> {
 		
 		checkForNegatives(notes);
 		
-		Long result = notes.entrySet().stream()
+		Long result = notes.entrySet().parallelStream()
 										.flatMapToLong(entry -> LongStream.of(entry.getKey().getValue() * entry.getValue()))
 										.sum();
 
@@ -243,9 +244,9 @@ public class GBPMinimumNotesDispenser implements Dispenser<GBP> {
 	//this could be a static utility method or in a base class but that's for refactoring
 	protected boolean checkForNegatives(Map<GBP, Integer> notes) {
 		
-		boolean result = notes.values().stream()
-													.filter(n-> n < 0)
-													.count() > 0;		
+		boolean result = notes.values().parallelStream()
+											.filter(n-> n < 0)
+											.count() > 0;		
 		if (result) {
 			logger.error("Negative notes found {}", notes);
 			

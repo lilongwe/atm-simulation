@@ -46,7 +46,7 @@ public class ATMServiceImpl<T extends Note> implements ATMService<T> {
 	/* (non-Javadoc)
 	 * @see com.lawrence.banking.ATMService#checkBalance(com.lawrence.banking.Account)
 	 */
-	//@Override
+	@Override
 	public Balance checkBalance(Account account) {
 
 		logger.debug("Getting balance for account '{}' , '{}", account.getNumber(), account.getSortCode());
@@ -57,7 +57,7 @@ public class ATMServiceImpl<T extends Note> implements ATMService<T> {
 	/* (non-Javadoc)
 	 * @see com.lawrence.banking.ATMService#withdraw(com.lawrence.banking.Account, int)
 	 */
-	//@Override
+	@Override
 	public Map<T,Integer> withdraw(Account account, long amount) throws InsufficientFundsException, InsufficientCashExceptition, ATMException, InsufficientDenominationException {
 		
 		if (null == account) {
